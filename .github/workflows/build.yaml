@@ -16,21 +16,30 @@ jobs:
       with:
         name: ssh-agent-proxy
         path: ssh-agent-proxy
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    needs: build
+    steps:
+    - name: Download Artifact
+      id: download
+      uses: actions/download-artifact@v2
+      with:
+        name: ssh-agent-proxy
+        path: ssh-agent-proxy
+    - name: Generate Checksum
+      run: sha256sum ${{ steps.download.outputs.download-path }} > sha256sum
     - name: Upload Release Asset
-      if: github.event_name == 'release'
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ssh-agent-proxy
+        asset_path: ${{ steps.download.outputs.download-path }}
         asset_name: ssh-agent-proxy
         asset_content_type: application/octet-stream
-    - name: Generate Checksum
-      if: github.event_name == 'release'
-      run: sha256sum ssh-agent-proxy > sha256sum
     - name: Upload Checksum
-      if: github.event_name == 'release'
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
