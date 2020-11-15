@@ -29,7 +29,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: ssh-agent-proxy
-        path: ssh-agent-proxy
+        path: .
     - name: Generate Checksum
       run: sha256sum ssh-agent-proxy > sha256sum.txt
     - name: Upload Release Asset
