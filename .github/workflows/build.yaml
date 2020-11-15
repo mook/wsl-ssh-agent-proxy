@@ -31,7 +31,7 @@ jobs:
         name: ssh-agent-proxy
         path: ssh-agent-proxy
     - name: Generate Checksum
-      run: sha256sum ${{ steps.download.outputs.download-path }}/ssh-agent-proxy > sha256sum
+      run: sha256sum ssh-agent-proxy > sha256sum.txt
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
@@ -47,6 +47,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: sha256sum
-        asset_name: sha256sum
+        asset_path: sha256sum.txt
+        asset_name: sha256sum.txt
         asset_content_type: text/plain
