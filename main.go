@@ -29,12 +29,16 @@ func listen(socketPath string) error {
 		return fmt.Errorf("Error extracting proxy executable: %w", err)
 	}
 	defer proxy.Close()
-	log("Will use proxy at %s\n", proxy)
+	log("Will use proxy at %s", proxy)
 
 	// Listen on the Unix socket
-	err = removeExistingSocket(socketPath)
+	ready, err := removeExistingSocket(socketPath)
 	if err != nil {
 		return fmt.Errorf("Could not remove existing socket: %w", err)
+	}
+	if !ready {
+		log("Another SSH agent already exists, exiting.")
+		return nil
 	}
 	addr, err := net.ResolveUnixAddr("unix", socketPath)
 	if err != nil {
@@ -84,7 +88,7 @@ func main() {
 
 	err := listen(*socketPath)
 	if err != nil {
-		log("Error: %s\n", err)
+		log("Error: %s", err)
 		os.Exit(1)
 	}
 }
