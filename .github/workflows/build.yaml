@@ -14,6 +14,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
+        name: ssh-agent-proxy
         path: ssh-agent-proxy
     - name: Upload Release Asset
       if: github.event_name == 'release'
