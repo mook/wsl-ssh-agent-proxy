@@ -52,7 +52,7 @@ func extractProxy() (*proxyFile, error) {
 	return result, nil
 }
 
-//go:generate env GOOS=windows go build -o proxy.exe ./proxy
+//go:generate env GOOS=windows go build "-ldflags=-s -w" -o proxy.exe ./proxy
 // Note: go-bindata should be replaced when go1.16 is out with the stdlib
 // "embed" package
 //go:generate go run github.com/kevinburke/go-bindata/go-bindata -nomemcopy -o proxy.go proxy.exe
