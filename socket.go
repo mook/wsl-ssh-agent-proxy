@@ -18,6 +18,7 @@ func removeExistingSocket(socketPath string) (bool, error) {
 		return false, fmt.Errorf("Could not check if socket %s is in use: %w", socketPath, err)
 	}
 	if inUse {
+		log("Socket %s already in use", socketPath)
 		return false, nil
 	}
 
@@ -27,6 +28,7 @@ func removeExistingSocket(socketPath string) (bool, error) {
 		return false, fmt.Errorf("Could not remove socket %s: %w", socketPath, err)
 	}
 
+	log("Socket %s is available", socketPath)
 	return true, nil
 }
 
@@ -44,7 +46,7 @@ func isSocketInUse(socketPath string) (bool, error) {
 		}
 		return false, fmt.Errorf("Could not find header in /proc/net/unix")
 	}
-	fields := strings.Split(scanner.Text(), " ")
+	fields := strings.Fields(scanner.Text())
 	if len(fields) < 1 || fields[len(fields)-1] != "Path" {
 		return false, fmt.Errorf("Could not find Path in /proc/net/unix, got %v", fields)
 	}

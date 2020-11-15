@@ -20,7 +20,7 @@ func (t *proxyFile) String() string {
 
 func (t *proxyFile) Close() error {
 	if t.path != "" {
-		fmt.Printf("Removing temporary file %s\n", t.path)
+		log("Removing temporary file %s", t.path)
 		return os.Remove(t.path)
 	}
 	return nil
