@@ -1,0 +1,38 @@
+name: Build
+on:
+  push: {}
+  release: {}
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build
+      run: make
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: ssh-agent-proxy
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ github.event.release.release.upload_url }}
+        asset_path: ssh-agent-proxy
+        asset_name: ssh-agent-proxy
+        asset_content_type: application/octet-stream
+    - name: Generate Checksum
+      if: github.event_name == 'release'
+      run: sha256sum ssh-agent-proxy > sha256sum
+    - name: Upload Checksum
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ github.event.release.release.upload_url }}
+        asset_path: sha256sum
+        asset_name: sha256sum
+        asset_content_type: text/plain
